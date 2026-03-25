@@ -736,6 +736,21 @@ def get_product_list() -> pd.DataFrame:
     )
 
 
+def get_product_detail(product_key: int) -> dict:
+    """Full product info for a single product."""
+    row = query_df(
+        "SELECT p.product_key, p.product_id, p.product_name, p.brand, p.subcategory, "
+        "p.unit_price, p.cost_price, c.category_name, c.parent_category "
+        "FROM dim_product p "
+        "LEFT JOIN dim_category c ON p.subcategory = c.category_name "
+        "WHERE p.product_key = ?",
+        (product_key,),
+    )
+    if row.empty:
+        return {}
+    return row.iloc[0].to_dict()
+
+
 # ---------------------------------------------------------------------------
 #  Quick self-test
 # ---------------------------------------------------------------------------

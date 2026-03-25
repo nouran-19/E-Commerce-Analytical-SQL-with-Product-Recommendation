@@ -28,7 +28,7 @@ st.markdown("""
 
 /* ---------- Global ---------- */
 html, body, [class*="st-"] {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 .stApp {
     background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 40%, #16213e 100%);
@@ -36,6 +36,11 @@ html, body, [class*="st-"] {
 header[data-testid="stHeader"] {
     background: transparent;
 }
+/* Fix Streamlit default text colors for dark backgrounds */
+.stMarkdown, .stMarkdown p, .stCaption, label, .stSelectbox label {
+    color: #cbd5e1 !important;
+}
+h1, h2, h3 { color: #f1f5f9 !important; }
 
 /* ---------- Sidebar ---------- */
 section[data-testid="stSidebar"] {
@@ -46,34 +51,44 @@ section[data-testid="stSidebar"] .stRadio label {
     color: #e0e0e0 !important;
 }
 
-/* ---------- KPI cards ---------- */
+/* ---------- KPI cards (fixed overflow) ---------- */
 .kpi-card {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 16px;
-    padding: 1.2rem 1.5rem;
+    padding: 1rem 0.8rem;
     backdrop-filter: blur(10px);
     transition: transform 0.25s, box-shadow 0.25s;
     text-align: center;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
 }
 .kpi-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(99,102,241,0.18);
 }
 .kpi-label {
-    font-size: 0.78rem;
-    font-weight: 500;
+    font-size: 0.68rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: 0.8px;
     color: #a0aec0;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.35rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .kpi-value {
-    font-size: 1.6rem;
+    font-size: clamp(1rem, 2.2vw, 1.45rem);
     font-weight: 700;
     background: linear-gradient(135deg, #667eea, #a78bfa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    word-break: break-word;
+    line-height: 1.2;
 }
 
 /* ---------- Section titles ---------- */
@@ -87,47 +102,95 @@ section[data-testid="stSidebar"] .stRadio label {
     display: inline-block;
 }
 
-/* ---------- Recommendation cards ---------- */
+/* ---------- Product detail card (left side of recs page) ---------- */
+.product-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 18px;
+    padding: 1.8rem;
+    backdrop-filter: blur(10px);
+    height: 100%;
+}
+.product-card-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+.product-card-badge {
+    display: inline-block;
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #a78bfa;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+.product-card-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 1rem;
+}
+.product-card-detail {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 0.35rem;
+    line-height: 1.5;
+}
+
+/* ---------- Recommendation cards (right side) ---------- */
 .rec-card {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.10);
     border-radius: 14px;
-    padding: 1.2rem;
+    padding: 1rem 0.9rem;
     backdrop-filter: blur(8px);
     transition: transform 0.2s, box-shadow 0.2s;
-    height: 100%;
+    margin-bottom: 0.7rem;
 }
 .rec-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 24px rgba(139,92,246,0.2);
 }
 .rec-rank {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #a78bfa;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
 }
 .rec-name {
-    font-size: 1rem;
+    font-size: 0.92rem;
     font-weight: 600;
     color: #f1f5f9;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
+    margin-bottom: 0.3rem;
+    line-height: 1.25;
 }
 .rec-detail {
-    font-size: 0.78rem;
+    font-size: 0.73rem;
     color: #94a3b8;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.1rem;
 }
 .rec-score {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
     font-weight: 700;
     background: linear-gradient(135deg, #34d399, #6ee7b7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-top: 0.6rem;
+    margin-top: 0.4rem;
+}
+.rec-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
 }
 
 /* ---------- Tables ---------- */
@@ -449,7 +512,7 @@ elif page == "👥 Customer Analytics":
 # =====================================================================
 elif page == "🎯 Recommendations":
     st.markdown("# 🎯 Product Recommendations")
-    st.caption("Select a product to see its top-4 recommended products based on co-purchase scoring")
+    st.caption("Select a product to see its top-4 recommended products")
 
     products = db.get_product_list()
 
@@ -466,23 +529,57 @@ elif page == "🎯 Recommendations":
     )
     selected_key = product_options[selected_label]
 
+    # Get product detail + recommendations
+    prod = db.get_product_detail(selected_key)
     recs = db.get_recommendations_for(selected_key)
 
-    if recs.empty:
-        st.info("No recommendations available for this product (no co-purchase data).")
-    else:
-        cols = st.columns(len(recs))
-        for col, (_, row) in zip(cols, recs.iterrows()):
-            col.markdown(f"""
-            <div class="rec-card">
-                <div class="rec-rank">#{int(row['recommendation_rank'])} Recommendation</div>
-                <div class="rec-name">{row['candidate_product_name']}</div>
-                <div class="rec-detail">🏷️ {row['candidate_brand']} · {row['candidate_subcategory']}</div>
-                <div class="rec-detail">💰 EGP {row['candidate_price']:,.0f}</div>
-                <div class="rec-score">{row['recommendation_score']:.1f}</div>
-                <div class="rec-detail" style="margin-top:2px">recommendation score</div>
+    st.markdown("")
+
+    # ---- Left: Selected Product  |  Right: 4 Recommendations ----
+    left_col, right_col = st.columns([2, 3], gap="large")
+
+    with left_col:
+        if prod:
+            margin_pct = ((prod['unit_price'] - prod['cost_price']) / max(prod['unit_price'], 0.01) * 100)
+            st.markdown(f"""
+            <div class="product-card">
+                <div class="rec-rank" style="color:#667eea; margin-bottom:0.6rem">SELECTED PRODUCT</div>
+                <div class="product-card-title">{prod['product_name']}</div>
+                <div style="margin-bottom:0.8rem">
+                    <span class="product-card-badge">🏷️ {prod['brand']}</span>
+                    <span class="product-card-badge">📂 {prod['subcategory']}</span>
+                    {f'<span class="product-card-badge">📁 {prod["parent_category"]}</span>' if prod.get('parent_category') else ''}
+                </div>
+                <div class="product-card-detail">Product ID: <strong style="color:#e2e8f0">{prod['product_id']}</strong></div>
+                <div class="product-card-detail">Unit Price: <strong style="color:#e2e8f0">EGP {prod['unit_price']:,.0f}</strong></div>
+                <div class="product-card-detail">Cost Price: <strong style="color:#e2e8f0">EGP {prod['cost_price']:,.0f}</strong></div>
+                <div class="product-card-detail">Margin: <strong style="color:#34d399">{margin_pct:.1f}%</strong></div>
+                <div class="product-card-price">EGP {prod['unit_price']:,.0f}</div>
             </div>
             """, unsafe_allow_html=True)
+
+    with right_col:
+        if recs.empty:
+            st.info("No recommendations available for this product (no co-purchase data).")
+        else:
+            st.markdown('<div class="rec-rank" style="color:#667eea; margin-bottom:0.5rem; font-size:0.7rem">TOP 4 RECOMMENDATIONS</div>', unsafe_allow_html=True)
+            # Stacked: 2 rows × 2 columns
+            for i in range(0, len(recs), 2):
+                row_recs = recs.iloc[i:i+2]
+                rec_cols = st.columns(2)
+                for rec_col, (_, row) in zip(rec_cols, row_recs.iterrows()):
+                    rec_col.markdown(f"""
+                    <div class="rec-card">
+                        <div class="rec-rank">#{int(row['recommendation_rank'])} Recommendation</div>
+                        <div class="rec-name">{row['candidate_product_name']}</div>
+                        <div class="rec-detail">🏷️ {row['candidate_brand']} · {row['candidate_subcategory']}</div>
+                        <div class="rec-detail">💰 EGP {row['candidate_price']:,.0f}</div>
+                        <div class="rec-score">{row['recommendation_score']:.1f}</div>
+                        <div class="rec-detail" style="margin-top:2px; font-size:0.65rem">score</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+    st.markdown("")
 
     # Show scoring explanation
     with st.expander("📐 How recommendations are scored"):
@@ -519,3 +616,4 @@ elif page == "🎯 Recommendations":
             ),
             use_container_width=True, hide_index=True,
         )
+
